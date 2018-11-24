@@ -9,6 +9,10 @@ supply.csv
 demand.csv
 ```
 
+### Reference
+https://www.zipjet.de/en/berlin/order/new/time
+
+
 ### Data preprocessing
 
 1) supply.csv
@@ -44,3 +48,25 @@ demand.csv
 <b> (5) make the training data using 5 main factor (min, max, mean, first, last )
 
 <b> (6) sum-up the 5-factors during the time shift
+
+<b> (7) I add some combination of factors
+    - last , max
+    - last , mean
+
+### Training
+  - Use SVR for the baseline
+  - then tuned XGBRegressor
+
+  (1) 'avail_area_ratio' is most significant feature
+  - One-day (such as 2018-01-03) has a several timeslot (06:00, 06:30 ...)
+  - I summed up the each avail_area_ratio stats to the time-shift (MS / ES)
+  - I assumed the 5-factors are most important
+
+###### If I have a more time to deal with the data then I applied the LSTM to extract the feature of each grid and timeslots (06:00, 06:30 etc.)
+
+  - To find the best results, using the 5-fold Gridsearch of parameters
+
+### Conclusion
+  - XGBRegressor shows slightly better result than SVR
+  - overall MSE(root mean squared error) around 13~25 depends on the features
+  - I choose the **MAX** avail_area_ratio feature for the lowest MSE
